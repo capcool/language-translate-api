@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const Ably = require('ably');
 require('dotenv').config();
 const app = express();
 const cors = require('cors');
@@ -35,7 +36,20 @@ app.post('/translateTextWithDeepL',(req,res)=>{
 });
    // res.send("test");
 });
-app.listen(3000, () => {
+app.get('/getAblyAccesstoken',(req,res)=>{
+  let {clientId}=req.query
+
+  const ably= new Ably.Realtime(process.env.ablyKey)
+ ably.auth.requestToken({clientId:clientId},(err,tokenDetails)=>{
+ ably.close();
+  res.json(tokenDetails)
+ })
+
+
+
+
+})
+app.listen(3001, () => {
   console.log('Server running on port 3000');
 });
 
